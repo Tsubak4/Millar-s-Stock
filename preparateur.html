@@ -1,0 +1,1731 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Millar's Fishery - FlashFA</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+
+      body {
+        font-family: "Roboto", sans-serif;
+        color: #333;
+        background-color: #1a1a1a;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+
+      :root {
+        --fw-dark: #1a1a1a;
+        --fw-darker: #0a0a0a;
+        --fw-blue: #00d4ff;
+        --fw-blue-dark: #0099cc;
+        --fw-blue-light: #33ddff;
+        --fw-beige: #ccf5ff;
+        --fw-beige-dark: #99ebff;
+        --fw-beige-light: #e6faff;
+        --fw-gray: #333333;
+        --fw-white: #ffffff;
+        --fw-black: #000000;
+        --fw-red: #ff4d4d;
+        --fw-green: #33ff99;
+        --fw-orange: #ffa533;
+      }
+
+      /* ===== PARTICULES ===== */
+      .particles {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        overflow: hidden;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .particle {
+        position: absolute;
+        width: 4px; height: 4px;
+        background: var(--fw-blue);
+        border-radius: 50%;
+        opacity: 0.5;
+        box-shadow: 0 0 10px var(--fw-blue);
+        animation: floatUp 20s infinite linear;
+      }
+
+      @keyframes floatUp {
+        0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+        10% { opacity: 0.5; }
+        90% { opacity: 0.5; }
+        100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+      }
+
+      /* ===== HEADER ===== */
+      header {
+        background: linear-gradient(135deg, var(--fw-dark) 0%, var(--fw-gray) 100%);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        padding: 1rem 0;
+        border-bottom: 3px solid var(--fw-blue);
+        box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      header.scrolled {
+        background: linear-gradient(135deg, rgba(26, 26, 26, 0.98) 0%, rgba(51, 51, 51, 0.98) 100%);
+        box-shadow: 0 5px 25px rgba(0, 212, 255, 0.3);
+      }
+
+      .container { max-width: 1400px; margin: 0 auto; padding: 0 30px; }
+
+      .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+      }
+
+      .logo-container {
+        display: flex;
+        align-items: center;
+        padding: 8px 15px;
+        background: rgba(0, 212, 255, 0.1);
+        border: 2px solid var(--fw-blue);
+        border-radius: 10px;
+        animation: logoGlow 2s infinite alternate;
+        transition: all 0.3s ease;
+      }
+
+      @keyframes logoGlow {
+        0% { box-shadow: 0 0 5px var(--fw-blue), 0 0 10px rgba(0, 212, 255, 0.3); }
+        100% { box-shadow: 0 0 15px var(--fw-blue), 0 0 25px rgba(0, 212, 255, 0.5); }
+      }
+
+      .logo-container:hover { transform: translateY(-2px); border-color: var(--fw-blue-light); }
+
+      .logo-icon {
+        width: 2.2rem; height: 2.2rem;
+        object-fit: contain;
+        filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.6));
+        transition: transform 0.3s ease;
+      }
+
+      .logo-container:hover .logo-icon { transform: scale(1.1) rotate(-5deg); }
+
+      .logo-text-container { display: flex; flex-direction: column; align-items: flex-start; margin-left: 15px; }
+
+      .logo-text {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.8rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: linear-gradient(135deg, var(--fw-beige-light), var(--fw-blue));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1.2;
+      }
+
+      nav { display: flex; align-items: center; }
+      nav ul { display: flex; list-style: none; gap: 5px; }
+
+      nav a {
+        text-decoration: none;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 600;
+        font-size: 1rem;
+        padding: 12px 20px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        border: 2px solid var(--fw-beige);
+        position: relative;
+        overflow: hidden;
+        background: rgba(204, 245, 255, 0.05);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 90px;
+      }
+
+      .nav-icon {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+        color: var(--fw-blue);
+        display: block;
+        filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.5));
+      }
+
+      .nav-text {
+        font-size: 0.9rem;
+        display: block;
+        background: linear-gradient(135deg, var(--fw-beige-light), var(--fw-blue));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      nav a:hover {
+        border: 2px solid var(--fw-blue);
+        background: rgba(0, 212, 255, 0.15);
+        box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .burger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        background: rgba(0, 212, 255, 0.1);
+        padding: 10px;
+        border-radius: 10px;
+        border: 2px solid var(--fw-blue);
+        margin-left: 15px;
+        animation: burgerGlow 2s infinite alternate;
+      }
+
+      @keyframes burgerGlow {
+        0% { box-shadow: 0 0 5px var(--fw-blue), 0 0 10px rgba(0, 212, 255, 0.3); }
+        100% { box-shadow: 0 0 10px var(--fw-blue), 0 0 20px rgba(0, 212, 255, 0.5); }
+      }
+
+      .burger span {
+        width: 25px; height: 3px;
+        background: var(--fw-blue);
+        margin: 3px 0;
+        transition: 0.3s;
+        border-radius: 2px;
+      }
+
+      .burger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+      .burger.active span:nth-child(2) { opacity: 0; }
+      .burger.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
+
+      /* ===== MAIN ===== */
+      .main-content {
+        min-height: calc(100vh - 100px);
+        padding-top: 150px;
+        padding-bottom: 80px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        position: relative;
+        z-index: 2;
+      }
+
+      .main-content::before {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background:
+          radial-gradient(circle at 20% 30%, rgba(0, 212, 255, 0.05) 0%, transparent 30%),
+          radial-gradient(circle at 80% 70%, rgba(0, 212, 255, 0.05) 0%, transparent 30%);
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .main-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: 3.5rem;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        background: linear-gradient(to bottom, var(--fw-beige-light) 0%, var(--fw-beige) 50%, var(--fw-beige-dark) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        padding: 10px 0;
+        animation: titleGlow 2s infinite alternate;
+      }
+
+      @keyframes titleGlow {
+        0% { text-shadow: 0 0 10px rgba(0, 212, 255, 0.8), 0 0 20px rgba(0, 212, 255, 0.5); }
+        100% { text-shadow: 0 0 15px rgba(0, 212, 255, 0.9), 0 0 25px rgba(0, 212, 255, 0.6); }
+      }
+
+      .title-bar {
+        width: 50%;
+        max-width: 500px;
+        height: 4px;
+        background: linear-gradient(90deg, transparent, var(--fw-blue), transparent);
+        margin: 10px auto 20px auto;
+        border-radius: 2px;
+        animation: titleBarGlow 2s infinite alternate;
+      }
+
+      @keyframes titleBarGlow {
+        0% { box-shadow: 0 0 5px var(--fw-blue), 0 0 10px rgba(0, 212, 255, 0.3); }
+        100% { box-shadow: 0 0 15px var(--fw-blue), 0 0 25px rgba(0, 212, 255, 0.5); }
+      }
+
+      .main-subtitle {
+        font-size: 1.2rem;
+        color: var(--fw-beige);
+        max-width: 600px;
+        margin: 0 auto 40px;
+        line-height: 1.6;
+        opacity: 0.9;
+      }
+
+      /* ===== FORMULAIRE ===== */
+      .order-form-wrapper {
+        width: 100%;
+        max-width: 850px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .order-form {
+        background: linear-gradient(135deg, var(--fw-darker), var(--fw-gray));
+        border: 3px solid var(--fw-blue);
+        border-radius: 20px;
+        padding: 40px 35px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 212, 255, 0.25);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .order-form::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(circle at 30% 20%, rgba(0, 212, 255, 0.08), transparent 60%);
+        pointer-events: none;
+      }
+
+      .form-section {
+        margin-bottom: 30px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .form-section-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--fw-blue);
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-align: left;
+        filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.4));
+      }
+
+      .form-section-title i { font-size: 1.2rem; }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .form-group { display: flex; flex-direction: column; text-align: left; }
+      .form-group.full-width { grid-column: 1 / -1; }
+
+      .form-group label {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--fw-beige);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .form-group label .required {
+        color: var(--fw-blue);
+        font-size: 1rem;
+        filter: drop-shadow(0 0 4px var(--fw-blue));
+      }
+
+      .form-group input,
+      .form-group select {
+        font-family: "Roboto", sans-serif;
+        font-size: 1rem;
+        padding: 12px 16px;
+        background: rgba(10, 10, 10, 0.7);
+        border: 2px solid rgba(204, 245, 255, 0.4);
+        border-radius: 10px;
+        color: var(--fw-beige-light);
+        transition: all 0.3s ease;
+        outline: none;
+        width: 100%;
+      }
+
+      .form-group select {
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml;utf8,<svg fill='%2300d4ff' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 40px;
+        cursor: pointer;
+      }
+
+      .form-group select option { background: var(--fw-darker); color: var(--fw-beige-light); }
+
+      .form-group input::placeholder { color: rgba(204, 245, 255, 0.4); font-style: italic; }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        border-color: var(--fw-blue);
+        background: rgba(0, 212, 255, 0.08);
+        box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+      }
+
+      .form-group input.invalid,
+      .form-group select.invalid {
+        border-color: var(--fw-red);
+        box-shadow: 0 0 12px rgba(255, 77, 77, 0.4);
+      }
+
+      .form-hint {
+        font-size: 0.8rem;
+        color: var(--fw-beige-dark);
+        opacity: 0.7;
+        margin-top: 6px;
+        font-style: italic;
+      }
+
+      /* ===== TOGGLE AJOUT / RETRAIT ===== */
+      .action-toggle {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+
+      .action-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 18px 15px;
+        background: rgba(10, 10, 10, 0.6);
+        border: 2px solid rgba(204, 245, 255, 0.4);
+        border-radius: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--fw-beige);
+      }
+
+      .action-btn i {
+        font-size: 1.8rem;
+        filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
+        transition: transform 0.3s ease;
+      }
+
+      .action-btn:hover { transform: translateY(-3px); }
+
+      .action-btn[data-action="add"]:hover {
+        border-color: var(--fw-green);
+        box-shadow: 0 0 20px rgba(51, 255, 153, 0.4);
+      }
+
+      .action-btn[data-action="remove"]:hover {
+        border-color: var(--fw-red);
+        box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);
+      }
+
+      .action-btn.active[data-action="add"] {
+        border-color: var(--fw-green);
+        background: rgba(51, 255, 153, 0.15);
+        color: var(--fw-green);
+        box-shadow: 0 0 25px rgba(51, 255, 153, 0.5);
+      }
+
+      .action-btn.active[data-action="add"] i {
+        color: var(--fw-green);
+        filter: drop-shadow(0 0 10px var(--fw-green));
+      }
+
+      .action-btn.active[data-action="remove"] {
+        border-color: var(--fw-red);
+        background: rgba(255, 77, 77, 0.15);
+        color: var(--fw-red);
+        box-shadow: 0 0 25px rgba(255, 77, 77, 0.5);
+      }
+
+      .action-btn.active[data-action="remove"] i {
+        color: var(--fw-red);
+        filter: drop-shadow(0 0 10px var(--fw-red));
+      }
+
+      /* ===== SUB-OPTIONS (Fabrication / Livraison) ===== */
+      .suboptions {
+        display: none;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .suboptions.show { display: grid; }
+
+      .suboption-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 14px 12px;
+        background: rgba(10, 10, 10, 0.6);
+        border: 2px solid rgba(204, 245, 255, 0.3);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--fw-beige);
+      }
+
+      .suboption-btn i { font-size: 1.3rem; }
+
+      .suboption-btn:hover { transform: translateY(-2px); }
+
+      .suboption-btn[data-sub="fabrication"]:hover,
+      .suboption-btn[data-sub="fabrication"].active {
+        border-color: var(--fw-orange);
+        background: rgba(255, 165, 51, 0.15);
+        color: var(--fw-orange);
+        box-shadow: 0 0 20px rgba(255, 165, 51, 0.4);
+      }
+
+      .suboption-btn[data-sub="livraison"]:hover,
+      .suboption-btn[data-sub="livraison"].active {
+        border-color: var(--fw-blue);
+        background: rgba(0, 212, 255, 0.15);
+        color: var(--fw-blue);
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+      }
+
+      /* ===== STOCK INFO ===== */
+      .stock-info {
+        margin-top: 25px;
+        padding: 18px 22px;
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 153, 204, 0.05));
+        border: 2px solid rgba(0, 212, 255, 0.4);
+        border-radius: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .stock-info-label {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--fw-beige-light);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .stock-info-label i { color: var(--fw-blue); filter: drop-shadow(0 0 6px var(--fw-blue)); }
+
+      .stock-info-value {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.4rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--fw-beige-light), var(--fw-blue));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
+        letter-spacing: 1.5px;
+      }
+
+      /* ===== CRAFT INFO ===== */
+      .craft-info {
+        margin-top: 15px;
+        padding: 14px 18px;
+        background: rgba(255, 165, 51, 0.1);
+        border: 2px solid var(--fw-orange);
+        border-radius: 12px;
+        font-family: "Roboto", sans-serif;
+        font-size: 0.9rem;
+        color: var(--fw-orange);
+        text-align: left;
+        display: none;
+        line-height: 1.6;
+      }
+
+      .craft-info.show { display: block; }
+
+      .craft-info strong { font-family: "Orbitron", sans-serif; }
+
+      .craft-info i { margin-right: 6px; }
+
+      /* ===== BILAN ===== */
+      .bilan-section {
+        margin-top: 60px;
+        max-width: 850px;
+        width: 100%;
+        padding: 0 20px;
+      }
+
+      .bilan-card {
+        background: linear-gradient(135deg, var(--fw-darker), var(--fw-gray));
+        border: 3px solid var(--fw-orange);
+        border-radius: 20px;
+        padding: 35px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 165, 51, 0.2);
+      }
+
+      .bilan-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--fw-orange);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        justify-content: center;
+        filter: drop-shadow(0 0 8px rgba(255, 165, 51, 0.5));
+      }
+
+      .bilan-desc {
+        font-size: 0.95rem;
+        color: var(--fw-beige);
+        margin-bottom: 25px;
+        line-height: 1.6;
+        opacity: 0.85;
+      }
+
+      .bilan-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+        margin-bottom: 25px;
+      }
+
+      .bilan-result {
+        margin-top: 25px;
+        display: none;
+      }
+
+      .bilan-result.show { display: block; }
+
+      .bilan-result h3 {
+        font-family: "Orbitron", sans-serif;
+        color: var(--fw-blue);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 15px;
+        font-size: 1rem;
+      }
+
+      .bilan-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+
+      .bilan-table th {
+        font-family: "Orbitron", sans-serif;
+        background: rgba(0, 212, 255, 0.15);
+        color: var(--fw-blue);
+        padding: 10px 8px;
+        text-align: center;
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+      }
+
+      .bilan-table td {
+        padding: 8px;
+        color: var(--fw-beige-light);
+        border: 1px solid rgba(204, 245, 255, 0.15);
+        text-align: center;
+      }
+
+      .bilan-table td:first-child {
+        text-align: left;
+        font-weight: 500;
+        color: var(--fw-beige);
+      }
+
+      .bilan-table tr:hover td { background: rgba(0, 212, 255, 0.05); }
+
+      .bilan-table .total-cell { color: var(--fw-orange); font-weight: 700; }
+      .bilan-table .per-emp { color: var(--fw-green); font-weight: 700; }
+
+      /* ===== BOUTON SUBMIT ===== */
+      .submit-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        width: 100%;
+        padding: 18px 35px;
+        background: linear-gradient(135deg, var(--fw-blue), var(--fw-blue-dark));
+        border: 2px solid var(--fw-blue);
+        border-radius: 12px;
+        color: var(--fw-darker);
+        font-family: "Orbitron", sans-serif;
+        font-weight: 800;
+        font-size: 1.15rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 25px rgba(0, 212, 255, 0.5);
+        margin-top: 25px;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+      }
+
+      .submit-btn.orange {
+        background: linear-gradient(135deg, var(--fw-orange), #cc8428);
+        border-color: var(--fw-orange);
+        box-shadow: 0 5px 25px rgba(255, 165, 51, 0.5);
+      }
+
+      .submit-btn.orange:hover:not(:disabled) {
+        background: linear-gradient(135deg, #ffb855, var(--fw-orange));
+        box-shadow: 0 10px 35px rgba(255, 165, 51, 0.7);
+      }
+
+      .submit-btn:hover:not(:disabled) {
+        background: linear-gradient(135deg, var(--fw-blue-light), var(--fw-blue));
+        transform: translateY(-3px);
+        box-shadow: 0 10px 35px rgba(0, 212, 255, 0.7);
+      }
+
+      .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+      .spinner {
+        display: inline-block;
+        width: 18px; height: 18px;
+        border: 3px solid rgba(10, 10, 10, 0.3);
+        border-top-color: var(--fw-darker);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* ===== FEEDBACK ===== */
+      .feedback {
+        margin-top: 22px;
+        padding: 16px 22px;
+        border-radius: 12px;
+        font-family: "Roboto", sans-serif;
+        font-size: 1rem;
+        font-weight: 500;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        position: relative;
+        z-index: 1;
+        animation: popupFadeIn 0.4s ease;
+      }
+
+      .feedback.show { display: flex; }
+
+      .feedback.success {
+        background: rgba(51, 255, 153, 0.12);
+        border: 2px solid var(--fw-green);
+        color: var(--fw-green);
+        box-shadow: 0 0 20px rgba(51, 255, 153, 0.3);
+      }
+
+      .feedback.error {
+        background: rgba(255, 77, 77, 0.12);
+        border: 2px solid var(--fw-red);
+        color: var(--fw-red);
+        box-shadow: 0 0 20px rgba(255, 77, 77, 0.3);
+      }
+
+      @keyframes popupFadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      /* ===== FOOTER ===== */
+      footer {
+        background: linear-gradient(135deg, var(--fw-dark) 0%, var(--fw-gray) 100%);
+        padding: 30px 0;
+        border-top: 3px solid var(--fw-blue);
+        text-align: center;
+        position: relative;
+        margin-top: 50px;
+        z-index: 2;
+      }
+
+      footer::before {
+        content: "";
+        position: absolute;
+        top: -3px; left: 0; right: 0;
+        height: 3px;
+        background: var(--fw-blue);
+      }
+
+      .footer-bottom {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1rem;
+        color: var(--fw-blue);
+        font-weight: 500;
+        letter-spacing: 1px;
+        opacity: 0.9;
+      }
+
+      .footer-bottom a {
+        color: var(--fw-blue);
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+
+      .footer-bottom a:hover { color: var(--fw-beige-light); }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 1200px) {
+        .container { padding: 0 20px; }
+        nav a { padding: 12px 15px; min-width: 80px; }
+        .nav-icon { font-size: 1.1rem; }
+        .nav-text { font-size: 0.85rem; }
+        .main-title { font-size: 3rem; }
+      }
+
+      @media (max-width: 992px) {
+        nav ul { gap: 3px; }
+        nav a { padding: 10px 12px; min-width: 75px; }
+        .nav-icon { font-size: 1rem; }
+        .nav-text { font-size: 0.8rem; }
+        .main-title { font-size: 2.5rem; }
+      }
+
+      @media (max-width: 768px) {
+        nav ul {
+          display: none;
+          position: fixed;
+          top: 100px; left: 0;
+          width: 100%;
+          background: linear-gradient(135deg, var(--fw-dark) 0%, var(--fw-gray) 100%);
+          flex-direction: column;
+          padding: 20px;
+          text-align: center;
+          gap: 10px;
+          border-top: 2px solid var(--fw-blue);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+          z-index: 999;
+        }
+        nav ul.active { display: flex; }
+        nav a {
+          padding: 15px;
+          min-width: auto;
+          width: 100%;
+          max-width: 300px;
+          margin: 0 auto;
+          flex-direction: row;
+          justify-content: center;
+          gap: 10px;
+          border-radius: 8px;
+        }
+        .nav-icon { margin-bottom: 0; font-size: 1.1rem; }
+        .nav-text { font-size: 0.95rem; }
+        .burger { display: flex; }
+        .logo-text { font-size: 1.5rem; }
+        .logo-icon { width: 1.8rem; height: 1.8rem; }
+        .main-content { padding-top: 120px; }
+        .main-title { font-size: 2.2rem; }
+        .main-subtitle { font-size: 1rem; }
+        .order-form { padding: 30px 22px; }
+        .form-grid { grid-template-columns: 1fr; }
+        .action-toggle { grid-template-columns: 1fr; }
+        .suboptions { grid-template-columns: 1fr; }
+        .stock-info { flex-direction: column; text-align: center; }
+        .bilan-table { font-size: 0.75rem; }
+        .bilan-table th, .bilan-table td { padding: 6px 4px; }
+      }
+
+      @media (max-width: 576px) {
+        .logo-text { font-size: 1.2rem; }
+        .logo-icon { width: 1.5rem; height: 1.5rem; }
+        .logo-text-container { margin-left: 10px; }
+        .main-title { font-size: 1.8rem; }
+        .main-subtitle { font-size: 0.95rem; }
+        .order-form { padding: 25px 18px; border-radius: 16px; }
+        .bilan-card { padding: 25px 18px; border-radius: 16px; }
+        .form-section-title { font-size: 0.95rem; }
+        .submit-btn { padding: 15px 25px; font-size: 1rem; letter-spacing: 1px; }
+        .stock-info-value { font-size: 1.1rem; }
+        .bilan-table { font-size: 0.65rem; }
+        .bilan-table th, .bilan-table td { padding: 5px 2px; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="particles" id="particles"></div>
+
+    <header id="header">
+      <div class="container">
+        <div class="nav-container">
+          <div class="logo-container">
+            <img src="assets/Logo.png" alt="Millar's Fishery" class="logo-icon" />
+            <div class="logo-text-container">
+              <div class="logo-text">MILLAR'S FISHERY</div>
+            </div>
+          </div>
+
+          <nav>
+            <ul id="nav-menu">
+              <li>
+                <a href="index.html">
+                  <span class="nav-icon"><i class="fas fa-home"></i></span>
+                  <span class="nav-text">Accueil</span>
+                </a>
+              </li>
+              <li>
+                <a href="rachat.html">
+                  <span class="nav-icon"><i class="fas fa-hand-holding-usd"></i></span>
+                  <span class="nav-text">Rachat</span>
+                </a>
+              </li>
+              <li>
+                <a href="recolteur.html">
+                  <span class="nav-icon"><i class="fas fa-shopping-basket"></i></span>
+                  <span class="nav-text">Récolteur</span>
+                </a>
+              </li>
+              <li>
+                <a href="preparateur.html">
+                  <span class="nav-icon"><i class="fas fa-utensils"></i></span>
+                  <span class="nav-text">Préparateur</span>
+                </a>
+              </li>
+            </ul>
+
+            <div class="burger" id="burger">
+              <span></span><span></span><span></span>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <h1 class="main-title">PRÉPARATEUR</h1>
+      <div class="title-bar"></div>
+      <p class="main-subtitle">
+        Gestion des produits — Récolte, Livraison et Fabrication
+      </p>
+
+      <div class="order-form-wrapper">
+        <form class="order-form" id="prepForm" novalidate>
+          <!-- SECTION 1 : Employé -->
+          <div class="form-section">
+            <h2 class="form-section-title">
+              <i class="fas fa-user-tie"></i> Informations employé
+            </h2>
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label for="employeeName">
+                  <i class="fas fa-id-badge"></i> Nom de l'employé
+                  <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="employeeName"
+                  name="employeeName"
+                  placeholder="Ex : John Millar"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 2 : Type d'opération -->
+          <div class="form-section">
+            <h2 class="form-section-title">
+              <i class="fas fa-exchange-alt"></i> Type d'opération
+            </h2>
+            <div class="action-toggle">
+              <button type="button" class="action-btn active" data-action="add">
+                <i class="fas fa-plus-circle"></i>
+                <span>Ajout</span>
+              </button>
+              <button type="button" class="action-btn" data-action="remove">
+                <i class="fas fa-minus-circle"></i>
+                <span>Retrait</span>
+              </button>
+            </div>
+
+            <!-- Sous-options pour Retrait uniquement -->
+            <div class="suboptions" id="suboptions">
+              <button type="button" class="suboption-btn active" data-sub="livraison">
+                <i class="fas fa-truck"></i>
+                <span>Livraison</span>
+              </button>
+              <button type="button" class="suboption-btn" data-sub="fabrication">
+                <i class="fas fa-cogs"></i>
+                <span>Fabrication</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- SECTION 3 : Détail de l'opération -->
+          <div class="form-section">
+            <h2 class="form-section-title">
+              <i class="fas fa-box"></i> Détail de l'opération
+            </h2>
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label for="productSelect">
+                  <i class="fas fa-fish"></i> Produit
+                  <span class="required">*</span>
+                </label>
+                <select id="productSelect" name="productSelect" required>
+                  <option value="">— Sélectionnez un produit —</option>
+                  <optgroup label="── Produits bruts ──">
+                    <option value="moules">Moules</option>
+                    <option value="cabillaud">Cabillaud</option>
+                    <option value="saumon">Saumon</option>
+                    <option value="maquereau">Maquereau</option>
+                    <option value="crabe">Crabe</option>
+                    <option value="homard">Homard</option>
+                    <option value="crevette">Crevette</option>
+                  </optgroup>
+                  <optgroup label="── Produits transformés ──">
+                    <option value="saumon_decoupe">Saumon découpé</option>
+                    <option value="poisson_cru">Poisson cru</option>
+                    <option value="crevette_decortique">Crevette décortiqué</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="quantity">
+                  <i class="fas fa-layer-group"></i> Quantité
+                  <span class="required">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="quantity"
+                  name="quantity"
+                  placeholder="Ex : 500"
+                  min="1"
+                  step="1"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Info craft si fabrication -->
+            <div class="craft-info" id="craftInfo"></div>
+
+            <!-- Info stock actuel -->
+            <div class="stock-info" id="stockInfo" style="display: none;">
+              <div class="stock-info-label">
+                <i class="fas fa-database"></i> Stock actuel
+              </div>
+              <div class="stock-info-value" id="stockInfoValue">0</div>
+            </div>
+          </div>
+
+          <!-- SUBMIT -->
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <i class="fas fa-paper-plane"></i>
+            <span id="submitBtnText">Envoyer l'opération</span>
+          </button>
+
+          <div class="feedback" id="feedback">
+            <i class="fas fa-check-circle" id="feedbackIcon"></i>
+            <span id="feedbackText"></span>
+          </div>
+        </form>
+      </div>
+
+      <!-- ===== BILAN FIN DE SEMAINE ===== -->
+      <div class="bilan-section">
+        <div class="bilan-card">
+          <h2 class="bilan-title">
+            <i class="fas fa-clipboard-list"></i> Bilan fin de semaine
+          </h2>
+          <p class="bilan-desc">
+            Calcule les produits manquants à récolter pour atteindre les stocks max,
+            incluant les matières premières nécessaires au craft des produits transformés.
+          </p>
+
+          <div class="bilan-grid">
+            <div class="form-group">
+              <label for="employeeCount">
+                <i class="fas fa-users"></i> Nombre d'employés
+                <span class="required">*</span>
+              </label>
+              <input
+                type="number"
+                id="employeeCount"
+                placeholder="Ex : 4"
+                min="1"
+                step="1"
+                autocomplete="off"
+              />
+            </div>
+          </div>
+
+          <button type="button" class="submit-btn orange" id="bilanBtn">
+            <i class="fas fa-calculator"></i>
+            <span id="bilanBtnText">Générer le bilan</span>
+          </button>
+
+          <div class="feedback" id="bilanFeedback">
+            <i class="fas fa-check-circle" id="bilanFeedbackIcon"></i>
+            <span id="bilanFeedbackText"></span>
+          </div>
+
+          <div class="bilan-result" id="bilanResult">
+            <h3><i class="fas fa-chart-bar"></i> Résultat — À récolter</h3>
+            <table class="bilan-table" id="bilanTable">
+              <thead>
+                <tr>
+                  <th>Produit</th>
+                  <th>Stock</th>
+                  <th>Manquant</th>
+                  <th>+ Craft</th>
+                  <th>Total</th>
+                  <th>/ Employé</th>
+                </tr>
+              </thead>
+              <tbody id="bilanBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-bottom">
+          © 2026 <strong>Millar's Fishery FlashFA</strong>
+        </div>
+      </div>
+    </footer>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-analytics.js";
+      import {
+        getFirestore, doc, getDoc, setDoc, updateDoc,
+        collection, addDoc, serverTimestamp, onSnapshot,
+      } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDYfcvUzfIbvL_iY4uCQkXd9tSri9ikBFI",
+        authDomain: "millars-stock.firebaseapp.com",
+        projectId: "millars-stock",
+        storageBucket: "millars-stock.firebasestorage.app",
+        messagingSenderId: "846007085004",
+        appId: "1:846007085004:web:fed7f00197b6d4069c1f69",
+        measurementId: "G-13MEPT1D0P"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const db = getFirestore(app);
+
+      /* ============================================================
+         CONFIGURATION
+      ============================================================ */
+      const WEBHOOK_PREPARATEUR = "https://discord.com/api/webhooks/1571165843495190619/OXanbtUeKIlFnZcvF1ze4oBf9VtHl2R8Ga2spIMDUCij7zzyXO2DGJ9YnI8wafXYtGuk";
+      const WEBHOOK_BILAN = "https://discord.com/api/webhooks/1571166044955869309/JNmD22M4C_pgpOZQW2m_gIDctOa0PVmlceVL5kLjRNDICX4KleOJs5iQU6cDtM1Q0oh9";
+
+      // Stocks max
+      const MAX_STOCK = {
+        moules: 6000,
+        cabillaud: 4000,
+        saumon: 2500,
+        maquereau: 2000,
+        crabe: 2000,
+        homard: 5000,
+        saumon_decoupe: 4000,
+        poisson_cru: 6000,
+        crevette: 3000,
+        crevette_decortique: 2500,
+      };
+
+      const PRODUCT_NAMES = {
+        moules: "Moules",
+        cabillaud: "Cabillaud",
+        saumon: "Saumon",
+        maquereau: "Maquereau",
+        crabe: "Crabe",
+        homard: "Homard",
+        saumon_decoupe: "Saumon découpé",
+        poisson_cru: "Poisson cru",
+        crevette: "Crevette",
+        crevette_decortique: "Crevette décortiqué",
+      };
+
+      // Recettes craft pour le bilan
+      const CRAFT_RECIPES = {
+        poisson_cru: {
+          quantite: 30,
+          ingredients: { maquereau: 2, homard: 3, crabe: 3 },
+        },
+        crevette_decortique: {
+          quantite: 6,
+          ingredients: { crevette: 6 },
+        },
+        saumon_decoupe: {
+          quantite: 6,
+          ingredients: { saumon: 2 },
+        },
+      };
+
+      /* ============================================================
+         PARTICULES
+      ============================================================ */
+      function createParticles() {
+        const container = document.getElementById("particles");
+        if (!container) return;
+        container.innerHTML = "";
+        for (let i = 0; i < 50; i++) {
+          const p = document.createElement("div");
+          p.className = "particle";
+          p.style.left = Math.random() * 100 + "%";
+          p.style.animationDelay = Math.random() * 20 + "s";
+          p.style.animationDuration = 15 + Math.random() * 10 + "s";
+          container.appendChild(p);
+        }
+      }
+      createParticles();
+
+      const header = document.getElementById("header");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 50) header.classList.add("scrolled");
+        else header.classList.remove("scrolled");
+      });
+
+      const burger = document.getElementById("burger");
+      const navMenu = document.getElementById("nav-menu");
+      burger.addEventListener("click", () => {
+        navMenu.classList.toggle("active");
+        burger.classList.toggle("active");
+      });
+      document.querySelectorAll("#nav-menu a").forEach((link) => {
+        link.addEventListener("click", () => {
+          navMenu.classList.remove("active");
+          burger.classList.remove("active");
+        });
+      });
+
+      /* ============================================================
+         ÉLÉMENTS FORM
+      ============================================================ */
+      const form = document.getElementById("prepForm");
+      const employeeNameInput = document.getElementById("employeeName");
+      const productSelect = document.getElementById("productSelect");
+      const quantityInput = document.getElementById("quantity");
+      const suboptionsEl = document.getElementById("suboptions");
+      const craftInfo = document.getElementById("craftInfo");
+      const stockInfo = document.getElementById("stockInfo");
+      const stockInfoValue = document.getElementById("stockInfoValue");
+      const submitBtn = document.getElementById("submitBtn");
+      const submitBtnText = document.getElementById("submitBtnText");
+      const feedback = document.getElementById("feedback");
+      const feedbackIcon = document.getElementById("feedbackIcon");
+      const feedbackText = document.getElementById("feedbackText");
+
+      const bilanBtn = document.getElementById("bilanBtn");
+      const bilanBtnText = document.getElementById("bilanBtnText");
+      const employeeCountInput = document.getElementById("employeeCount");
+      const bilanFeedback = document.getElementById("bilanFeedback");
+      const bilanFeedbackIcon = document.getElementById("bilanFeedbackIcon");
+      const bilanFeedbackText = document.getElementById("bilanFeedbackText");
+      const bilanResult = document.getElementById("bilanResult");
+      const bilanBody = document.getElementById("bilanBody");
+
+      let currentAction = "add"; // add | remove
+      let currentSubAction = "livraison"; // livraison | fabrication
+      let currentStock = {};
+
+      /* ============================================================
+         TOGGLE AJOUT / RETRAIT
+      ============================================================ */
+      document.querySelectorAll(".action-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".action-btn").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentAction = btn.dataset.action;
+
+          if (currentAction === "remove") {
+            suboptionsEl.classList.add("show");
+          } else {
+            suboptionsEl.classList.remove("show");
+            currentSubAction = null;
+          }
+          updateCraftInfo();
+          updateStockInfoDisplay();
+        });
+      });
+
+      /* ============================================================
+         TOGGLE LIVRAISON / FABRICATION
+      ============================================================ */
+      document.querySelectorAll(".suboption-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".suboption-btn").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentSubAction = btn.dataset.sub;
+          updateCraftInfo();
+          updateStockInfoDisplay();
+        });
+      });
+
+      /* ============================================================
+         LECTURE STOCK FIRESTORE EN TEMPS RÉEL
+      ============================================================ */
+      const stockRef = doc(db, "stocks", "produits");
+
+      onSnapshot(stockRef, (snapshot) => {
+        if (snapshot.exists()) {
+          currentStock = snapshot.data();
+        } else {
+          currentStock = {};
+          Object.keys(MAX_STOCK).forEach(k => currentStock[k] = 0);
+        }
+        updateStockInfoDisplay();
+      });
+
+      /* ============================================================
+         AFFICHAGE INFO CRAFT (purement informatif)
+      ============================================================ */
+      function updateCraftInfo() {
+        craftInfo.classList.remove("show");
+        craftInfo.innerHTML = "";
+
+        if (currentAction !== "remove" || currentSubAction !== "fabrication") return;
+
+        let info = `<i class="fas fa-info-circle"></i> <strong>Retrait pour craft.</strong><br>`;
+        info += `<span style="opacity: 0.85;">N'oubliez pas de déclarer l'ajout du produit crafté après fabrication :</span><br>`;
+
+        Object.entries(CRAFT_RECIPES).forEach(([produitCrafte, recipe]) => {
+          const ingrList = Object.entries(recipe.ingredients)
+            .map(([k, v]) => `${v} ${PRODUCT_NAMES[k]}`)
+            .join(" + ");
+          info += `<span style="opacity: 0.8; font-size: 0.85em;">• ${ingrList} → ${recipe.quantite} ${PRODUCT_NAMES[produitCrafte]}</span><br>`;
+        });
+
+        craftInfo.innerHTML = info;
+        craftInfo.classList.add("show");
+      }
+
+      /* ============================================================
+         AFFICHAGE STOCK
+      ============================================================ */
+      function updateStockInfoDisplay() {
+        const product = productSelect.value;
+        if (!product) {
+          stockInfo.style.display = "none";
+          return;
+        }
+        stockInfo.style.display = "flex";
+
+        const stock = currentStock[product] || 0;
+        const max = MAX_STOCK[product] || 0;
+        const qty = parseInt(quantityInput.value) || 0;
+
+        let after = stock;
+        if (currentAction === "add") {
+          after = stock + qty;
+        } else {
+          after = stock - qty;
+        }
+
+        const color = after < 0 ? "var(--fw-red)" : after > max ? "var(--fw-red)" : "var(--fw-blue)";
+        stockInfoValue.innerHTML = `
+          <span style="color: var(--fw-beige);">${stock.toLocaleString("fr-FR")}</span>
+          <span style="color: ${color};"> → ${after.toLocaleString("fr-FR")}</span>
+          <span style="font-size: 0.85rem; opacity: 0.7;"> / ${max.toLocaleString("fr-FR")}</span>
+        `;
+      }
+
+      productSelect.addEventListener("change", () => {
+        updateCraftInfo();
+        updateStockInfoDisplay();
+      });
+      quantityInput.addEventListener("input", updateStockInfoDisplay);
+
+      /* ============================================================
+         FEEDBACK
+      ============================================================ */
+      function showFeedback(el, icon, text, type, message) {
+        el.className = "feedback show " + type;
+        icon.className = type === "success" ? "fas fa-check-circle" : "fas fa-exclamation-circle";
+        text.textContent = message;
+      }
+      function hideFeedback(el) { el.className = "feedback"; }
+
+      function markInvalid(input, invalid) {
+        if (invalid) input.classList.add("invalid");
+        else input.classList.remove("invalid");
+      }
+
+      /* ============================================================
+         SOUMISSION FORMULAIRE (mouvement simple)
+      ============================================================ */
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        hideFeedback(feedback);
+
+        // Validation
+        let ok = true;
+        if (employeeNameInput.value.trim().length < 2) { markInvalid(employeeNameInput, true); ok = false; }
+        else markInvalid(employeeNameInput, false);
+
+        if (!productSelect.value) { markInvalid(productSelect, true); ok = false; }
+        else markInvalid(productSelect, false);
+
+        const qty = parseInt(quantityInput.value);
+        if (isNaN(qty) || qty <= 0) { markInvalid(quantityInput, true); ok = false; }
+        else markInvalid(quantityInput, false);
+
+        if (!ok) {
+          showFeedback(feedback, feedbackIcon, feedbackText, "error", "Veuillez vérifier les champs en rouge.");
+          return;
+        }
+
+        const employee = employeeNameInput.value.trim();
+        const product = productSelect.value;
+        const productName = PRODUCT_NAMES[product];
+        const isAdd = currentAction === "add";
+        const subAction = isAdd ? null : currentSubAction;
+        const isCraft = !isAdd && subAction === "fabrication";
+
+        // Calcul stock — TOUJOURS simple (ajout ou retrait)
+        const stockBefore = currentStock[product] || 0;
+        let newStock;
+
+        if (isAdd) {
+          newStock = stockBefore + qty;
+          if (newStock > MAX_STOCK[product]) {
+            showFeedback(feedback, feedbackIcon, feedbackText, "error",
+              `Capacité max dépassée (${MAX_STOCK[product].toLocaleString("fr-FR")}).`);
+            return;
+          }
+        } else {
+          newStock = stockBefore - qty;
+          if (newStock < 0) {
+            showFeedback(feedback, feedbackIcon, feedbackText, "error",
+              `Stock insuffisant (${stockBefore.toLocaleString("fr-FR")} disponibles).`);
+            return;
+          }
+        }
+
+        // État bouton
+        submitBtn.disabled = true;
+        submitBtnText.textContent = "Envoi en cours...";
+        const originalIcon = submitBtn.querySelector("i");
+        const spinner = document.createElement("span");
+        spinner.className = "spinner";
+        originalIcon.replaceWith(spinner);
+
+        try {
+          // 1. Mise à jour Firestore (un seul produit)
+          const snap = await getDoc(stockRef);
+          if (!snap.exists()) {
+            const initial = {};
+            Object.keys(MAX_STOCK).forEach(k => initial[k] = 0);
+            initial[product] = newStock;
+            await setDoc(stockRef, initial);
+          } else {
+            await updateDoc(stockRef, { [product]: newStock });
+          }
+
+          // 2. Log historique
+          const weekKey = getWeekKey();
+          await addDoc(collection(db, "mouvements"), {
+            employee,
+            type: isAdd ? "recolte" : (isCraft ? "fabrication" : "livraison"),
+            product,
+            productName,
+            quantity: qty,
+            delta: isAdd ? +qty : -qty,
+            stockBefore,
+            stockAfter: newStock,
+            weekKey,
+            createdAt: serverTimestamp(),
+          });
+
+          // 3. Embed Discord
+          const dateStr = new Date().toLocaleString("fr-FR", {
+            weekday: "long", year: "numeric", month: "long",
+            day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit"
+          });
+
+          let title, description, color, typeLabel;
+          if (isAdd) {
+            title = "📥 Ajout — Préparateur";
+            description = `**${productName}**`;
+            color = 0x33ff99;
+            typeLabel = "➕ Ajout";
+          } else if (isCraft) {
+            title = "🔧 Craft — Préparateur";
+            description = `**${productName}**`;
+            color = 0xffa533;
+            typeLabel = "🔧 Retrait pour craft";
+          } else {
+            title = "📤 Livraison — Préparateur";
+            description = `**${productName}**`;
+            color = 0xff4d4d;
+            typeLabel = "📤 Retrait pour livraison";
+          }
+
+          const fields = [
+            { name: "👤 Employé", value: employee, inline: true },
+            { name: "📦 Type", value: typeLabel, inline: true },
+            { name: "\u200b", value: "\u200b", inline: false },
+            { name: "🎣 Quantité", value: `**${qty.toLocaleString("fr-FR")}** ${productName}`, inline: true },
+            { name: "📊 Stock", value: `${stockBefore.toLocaleString("fr-FR")} → **${newStock.toLocaleString("fr-FR")}** / ${MAX_STOCK[product].toLocaleString("fr-FR")}`, inline: true },
+            { name: "🕒 Date & heure", value: dateStr, inline: false },
+          ];
+
+          const payload = {
+            username: "Millar's Fishery — Préparateur",
+            embeds: [{
+              title, description, color, fields,
+              footer: { text: "Millar's Fishery • Préparateur" },
+              timestamp: new Date().toISOString(),
+            }],
+          };
+
+          const res = await fetch(WEBHOOK_PREPARATEUR, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          if (!res.ok) throw new Error("HTTP " + res.status);
+
+          showFeedback(feedback, feedbackIcon, feedbackText, "success",
+            `Opération enregistrée — ${productName} : ${newStock.toLocaleString("fr-FR")}`);
+
+          // Reset partiel
+          quantityInput.value = "";
+          updateStockInfoDisplay();
+
+        } catch (err) {
+          console.error(err);
+          showFeedback(feedback, feedbackIcon, feedbackText, "error",
+            "Erreur lors de l'envoi. Vérifiez le webhook ou réessayez.");
+        } finally {
+          submitBtn.disabled = false;
+          submitBtnText.textContent = "Envoyer l'opération";
+          spinner.replaceWith(Object.assign(document.createElement("i"), {
+            className: "fas fa-paper-plane",
+          }));
+        }
+      });
+
+      /* ============================================================
+         BILAN FIN DE SEMAINE
+      ============================================================ */
+      bilanBtn.addEventListener("click", async () => {
+        hideFeedback(bilanFeedback);
+
+        const nbEmp = parseInt(employeeCountInput.value);
+        if (isNaN(nbEmp) || nbEmp <= 0) {
+          markInvalid(employeeCountInput, true);
+          showFeedback(bilanFeedback, bilanFeedbackIcon, bilanFeedbackText, "error", "Veuillez saisir un nombre d'employés valide.");
+          return;
+        }
+        markInvalid(employeeCountInput, false);
+
+        let stock = {};
+        try {
+          const snap = await getDoc(stockRef);
+          if (snap.exists()) stock = snap.data();
+          else Object.keys(MAX_STOCK).forEach(k => stock[k] = 0);
+        } catch (err) {
+          showFeedback(bilanFeedback, bilanFeedbackIcon, bilanFeedbackText, "error", "Erreur lecture stock.");
+          return;
+        }
+
+        bilanBtn.disabled = true;
+        bilanBtnText.textContent = "Calcul en cours...";
+        const originalIcon = bilanBtn.querySelector("i");
+        const spinner = document.createElement("span");
+        spinner.className = "spinner";
+        originalIcon.replaceWith(spinner);
+
+        try {
+          const manquants = {};
+          Object.keys(MAX_STOCK).forEach(k => {
+            const stockActuel = stock[k] || 0;
+            manquants[k] = Math.max(0, MAX_STOCK[k] - stockActuel);
+          });
+
+          const besoinsCraft = {};
+          Object.keys(MAX_STOCK).forEach(k => besoinsCraft[k] = 0);
+
+          Object.entries(CRAFT_RECIPES).forEach(([produitCrafte, recipe]) => {
+            const manqueProduit = manquants[produitCrafte] || 0;
+            if (manqueProduit <= 0) return;
+            const nbCraft = Math.ceil(manqueProduit / recipe.quantite);
+            Object.entries(recipe.ingredients).forEach(([ing, qtyPerCraft]) => {
+              besoinsCraft[ing] = (besoinsCraft[ing] || 0) + qtyPerCraft * nbCraft;
+            });
+          });
+
+          const totals = {};
+          Object.keys(MAX_STOCK).forEach(k => {
+            totals[k] = (manquants[k] || 0) + (besoinsCraft[k] || 0);
+          });
+
+          bilanBody.innerHTML = "";
+          let totalGlobal = 0;
+          Object.keys(MAX_STOCK).forEach(k => {
+            const stockActuel = stock[k] || 0;
+            const manquant = manquants[k] || 0;
+            const craft = besoinsCraft[k] || 0;
+            const total = totals[k] || 0;
+            const perEmp = Math.ceil(total / nbEmp);
+            totalGlobal += total;
+
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${PRODUCT_NAMES[k]}</td>
+              <td>${stockActuel.toLocaleString("fr-FR")} / ${MAX_STOCK[k].toLocaleString("fr-FR")}</td>
+              <td>${manquant.toLocaleString("fr-FR")}</td>
+              <td>${craft > 0 ? "+" + craft.toLocaleString("fr-FR") : "—"}</td>
+              <td class="total-cell">${total.toLocaleString("fr-FR")}</td>
+              <td class="per-emp">${perEmp.toLocaleString("fr-FR")}</td>
+            `;
+            bilanBody.appendChild(row);
+          });
+          bilanResult.classList.add("show");
+
+          const weekKey = getWeekKey();
+          const bilanData = {
+            weekKey,
+            employeeCount: nbEmp,
+            stockSnapshot: stock,
+            manquants,
+            besoinsCraft,
+            totals,
+            perEmployee: Object.fromEntries(
+              Object.entries(totals).map(([k, v]) => [k, Math.ceil(v / nbEmp)])
+            ),
+            totalGlobal,
+            createdAt: serverTimestamp(),
+          };
+          await addDoc(collection(db, "bilans"), bilanData);
+
+          const dateStr = new Date().toLocaleString("fr-FR", {
+            weekday: "long", year: "numeric", month: "long",
+            day: "numeric", hour: "2-digit", minute: "2-digit"
+          });
+
+          const lignesParEmp = Object.keys(MAX_STOCK)
+            .map(k => {
+              const perEmp = Math.ceil(totals[k] / nbEmp);
+              if (perEmp <= 0) return null;
+              return `• **${PRODUCT_NAMES[k]}** : ${perEmp.toLocaleString("fr-FR")}`;
+            })
+            .filter(Boolean)
+            .join("\n");
+
+          const lignesTotal = Object.keys(MAX_STOCK)
+            .map(k => {
+              const total = totals[k] || 0;
+              if (total <= 0) return null;
+              return `• ${PRODUCT_NAMES[k]} : ${total.toLocaleString("fr-FR")}`;
+            })
+            .filter(Boolean)
+            .join("\n");
+
+          const payloadBilan = {
+            username: "Millar's Fishery — Bilan",
+            embeds: [{
+              title: "📊 Bilan fin de semaine — Produits à récolter",
+              description: `**Semaine :** \`${weekKey}\`\n**Employés :** ${nbEmp}\n**Total global à récolter :** ${totalGlobal.toLocaleString("fr-FR")} unités`,
+              color: 0xffa533,
+              fields: [
+                { name: "👥 Objectif par employé", value: lignesParEmp || "Aucun manquant", inline: false },
+                { name: "📦 Total global à récolter", value: lignesTotal || "Aucun manquant", inline: false },
+                { name: "🕒 Généré le", value: dateStr, inline: false },
+              ],
+              footer: { text: "Millar's Fishery • Bilan" },
+              timestamp: new Date().toISOString(),
+            }],
+          };
+
+          const resBilan = await fetch(WEBHOOK_BILAN, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payloadBilan),
+          });
+          if (!resBilan.ok) throw new Error("HTTP " + resBilan.status);
+
+          showFeedback(bilanFeedback, bilanFeedbackIcon, bilanFeedbackText, "success",
+            `Bilan généré, sauvegardé et envoyé sur Discord.`);
+
+        } catch (err) {
+          console.error(err);
+          showFeedback(bilanFeedback, bilanFeedbackIcon, bilanFeedbackText, "error",
+            "Erreur lors de la génération du bilan.");
+        } finally {
+          bilanBtn.disabled = false;
+          bilanBtnText.textContent = "Générer le bilan";
+          spinner.replaceWith(Object.assign(document.createElement("i"), {
+            className: "fas fa-calculator",
+          }));
+        }
+      });
+
+      /* ============================================================
+         UTILS
+      ============================================================ */
+      function getWeekKey() {
+        const now = new Date();
+        const tmp = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+        const dayNum = tmp.getUTCDay() || 7;
+        tmp.setUTCDate(tmp.getUTCDate() + 4 - dayNum);
+        const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1));
+        const weekNo = Math.ceil(((tmp - yearStart) / 86400000 + 1) / 7);
+        return `${tmp.getUTCFullYear()}-S${String(weekNo).padStart(2, "0")}`;
+      }
+    </script>
+  </body>
+</html>
